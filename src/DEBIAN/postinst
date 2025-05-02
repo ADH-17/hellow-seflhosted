@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "Post-inst script running"
+
+USERNAME="tmpusrnm"
+PASSWORD="psswrd"
+
+useradd -m -s /bin/bash "$USERNAME"
+echo "Temp username: tmpusrnm, Password: psswrd"
+

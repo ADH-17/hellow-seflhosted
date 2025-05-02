@@ -1,0 +1,92 @@
+name: Build Workflow
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install-Dependencies
+        run: |
+          echo "Installing dependencies"
+          sudo apt-get update
+          sudo apt-get install -y build-essential dpkg
+      - name: Build Project
+        run: |
+          make build
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: build  # Ensure test runs only if build succeeds
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install-Dependencies
+        run: |
+          echo "Installing dependencies"
+          sudo apt-get update
+          sudo apt-get install -y build-essential dpkg      
+      - name: Test Project
+        run: |
+          make test
+
+  build-deb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: [build, test]  # Ensure build-deb runs only if build and test succeed
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install-Dependencies
+        run: |
+          echo "Installing dependencies"
+          sudo apt-get update
+          sudo apt-get install -y build-essential dpkg-dev debhelper
+      - name: Debug Before Build
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+      - name: Make debBuild.sh Executable
+        run: |
+          chmod +x debBuild.sh
+      - name: Build-deb
+        run: |
+          make build-deb
+      - name: Debug After Build
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+      - name: Find Deb Package
+        run: |
+          find . -name "hellow*.deb"
+      - name: Verify Deb Package
+        run: |
+          if [ -f hellow.deb ]; then
+            echo "Deb package found."
+          else
+            echo "Deb package not found!"
+            exit 1
+          fi
+      - name: Upload Deb Package
+        uses: actions/upload-artifact@v4
+        with: 
+          name: hellow-debian-package
+          path: hellow.deb  # Updated to match the output of debBuild.sh
+
+  lint-deb:
+    runs-on: ubuntu-latest
+    needs: build-deb  # Ensure lint-deb runs only if build-deb succeeds
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install-Dependencies
+        run: |
+          echo "Installing dependencies"
+          sudo apt-get update
+          sudo apt-get install -y build-essential dpkg    
+      - name: Lint-deb
+        run: |
+          make lint-deb

@@ -24,7 +24,7 @@ chmod 755 "$TEMP_DIR/DEBIAN/preinst"
 chmod 755 "$TEMP_DIR/DEBIAN/postinst"
 
 echo "Copy binary into place"
-cp src/SystemDaemon.py "$TEMP_DIR/usr/local/bin/"
+cp myproject/daemon.py "$TEMP_DIR/usr/local/bin/SystemDaemon.py"
 cp counter.service   "$TEMP_DIR/etc/systemd/system/"
 
 echo "Contents of $TEMP_DIR before building .deb:"

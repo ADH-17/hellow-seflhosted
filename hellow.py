@@ -1,10 +1,17 @@
-#!/usr/bin/env python3
 import time
 
-def main():
-    while True:
+def print_hello_world(times=1, delay=5):
+    for _ in range(times):
         print("HelloWorld")
-        time.sleep(5)
+        time.sleep(delay)
+
+def get_integers():
+    x = 5
+    y = 6
+    z = 2
+    w = 3
+    return x, y, z, w
 
 if __name__ == "__main__":
-    main()
+    print_hello_world()
+    get_integers()

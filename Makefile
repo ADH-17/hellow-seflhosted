@@ -15,17 +15,17 @@ build-deb:
 	@echo "Building deb file"
 	./debBuild.sh
 	@echo "Deb file location:"
-	@find . -name "counter*.deb"
+	@find hellow.deb
 
 clean:
 	rm -rf temp
 
 vclean: clean
-	rm -f counter*.deb countdaemon.deb
+	rm -f hellow*.deb hellowdaemon.deb
 
 install:
-	dpkg -i counter.deb  # Updated to match the output of debBuild.sh
+	dpkg -i hellow.deb  # Updated to match the output of debBuild.sh
 
 uninstall:
-	dpkg -r counter
+	dpkg -r hellow
 

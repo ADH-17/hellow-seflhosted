@@ -1,10 +1,23 @@
 #!/bin/sh
 
-echo "Post-inst script running"
+set -e
 
+echo "Running post-install script..."
+
+# Reload and start the service
+systemctl daemon-reload
+systemctl enable helloworld.service
+systemctl start helloworld.service
+
+# Create temporary user (optional, but be cautious)
 USERNAME="tmpusrnm"
 PASSWORD="psswrd"
 
-useradd -m -s /bin/bash "$USERNAME"
-echo "Temp username: tmpusrnm, Password: psswrd"
-
+# Only add if user doesn't exist
+if ! id "$USERNAME" >/dev/null 2>&1; then
+    useradd -m -s /bin/bash "$USERNAME"
+    echo "$USERNAME:$PASSWORD" | chpasswd
+    echo "Temporary user created: $USERNAME"
+else
+    echo "User $USERNAME already exists. Skipping creation."
+fi

@@ -19,4 +19,4 @@ COPY . .
 RUN pip3 install -r requirements.txt
 
 # Define the default command to run your service
-CMD ["python3", "helloworld.py"]
+CMD ["python3", "hellow.py"]
